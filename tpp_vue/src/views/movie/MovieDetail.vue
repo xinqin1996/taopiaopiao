@@ -125,5 +125,5 @@ export default {
 }
 </script>
 <style>
-  
+    @import url('../../assets/css/movieDetail.css');
 </style>

@@ -3,7 +3,7 @@ import App from './App.vue'
 import router from './router'
 
 //Vant 支持一次性导入所有组件，引入所有组件会增加代码包体积，因此不推荐这种做法
-//Vant的导入
+//Vant的导入0
 import Vant from 'vant'
 import 'vant/lib/index.css'
 Vue.use(Vant);
@@ -17,6 +17,7 @@ import 'mint-ui/lib/style.css'
 Vue.use(MintUI)
 // 第4步 ： 将字体图标引入到当前项目中,引入第三方的iconfont.css
 import  './font/font_1285854_comsztiakwk/iconfont.css'
+import  './font/font_ra16fscd53k/iconfont.css'
 
 // 5：引入axios,第三方模块
 import axios from "axios";
