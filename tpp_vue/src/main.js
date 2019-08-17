@@ -2,6 +2,12 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 
+//Vant 支持一次性导入所有组件，引入所有组件会增加代码包体积，因此不推荐这种做法
+//Vant的导入
+import Vant from 'vant'
+import 'vant/lib/index.css'
+Vue.use(Vant);
+
 //引入第三方的组件库 mint ui
 // 第1步 ：完整引入mint-ui组件库中的所有组件
 import MintUI from 'mint-ui'
