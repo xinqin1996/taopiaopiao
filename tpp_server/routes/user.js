@@ -6,8 +6,8 @@ const pool=require("../pool");
 router.get("/v1/reg",(req,res)=>{
   var uname=req.query.uname;
   var uphone=req.query.uphone;
-  var upwd=md5(req.query.upwd);
-  var sql="INSERT INTO tpp_user(uname,uphone,upwd) VALUES(?,?,?)";
+  var upwd=req.query.upwd;
+  var sql="INSERT INTO tpp_user(uname,uphone,upwd) VALUES(?,?,md5(?))";
   pool.query(sql,[uname,uphone,upwd],(err,result)=>{
     if(err) throw err;
     if(result.affectedRows>0){
