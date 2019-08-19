@@ -3,7 +3,7 @@ DROP DATABASE IF EXISTS tpp;
 CREATE DATABASE tpp CHARSET=UTF8;
 USE tpp;
 
-/** 用户信息 **/
+/** 用户信息 :**/
 /** 保存了uname,uphone,upwd  **/
 --  注册时输入下面3项，即可完成注册
 CREATE TABLE tpp_user(
