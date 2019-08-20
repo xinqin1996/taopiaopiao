@@ -12,7 +12,7 @@
     <div style="height:46px"></div>
     <!-- 城市名称列表 -->
 		<div class="index_bar" @click="selectCity">
-			<van-index-bar :index-list="indexList" :sticky-offset-top="45">
+			<van-index-bar :index-list="indexList" :sticky-offset-top="45" @select="select">
 				<van-index-anchor index="当前">当前</van-index-anchor>
         <!-- 获取vuex中的'杭州' -->
 				<van-cell :title="$store.getters.getCity" :data-id="$store.getters.getCity_id" />
@@ -134,9 +134,12 @@ export default {
       //关闭当前页面，返回前一个页面
       window.history.go(-1);
     },
+    select(index){
+      console.log(index)
+    },
 		//选择城市调回过来的页面，
 		selectCity(e){
-      e.stopPropagation;
+      // e.stopPropagation;
 			if(e.target.className=="van-cell__title"){
          this.cityInfor[0]=e.target.parentNode.dataset.id;//城市id
          if(this.cityInfor[0]==undefined){ 
@@ -168,5 +171,9 @@ export default {
 }
 </script>
 <style >
+  /* 击穿span元素，点击到.van-cell__title */
+  #select_city .van-cell__title span{
+    pointer-events: none !important;
+  }
   @import url('../../assets/css/selectCity.css');
 </style>

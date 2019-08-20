@@ -1,39 +1,31 @@
 <template>
-  <div>
-        <van-dropdown-menu>
-           <van-dropdown-item v-model="value" :options="option" />         
-          <van-dropdown-item v-model="value" :options="option" />
-          <van-dropdown-item title="筛选" ref="item">
-            <van-switch-cell v-model="switch1" title="包邮" />
-            <van-switch-cell v-model="switch2" title="团购" />
-            <van-button block type="info" @click="onConfirm">确认</van-button>
-          </van-dropdown-item>
-        </van-dropdown-menu>
-    <my-city></my-city>
-      <find-cinema-item v-for="(cinema,i) of list.cinema" :key="i" :cinema="cinema" :time="list.movie[i]"></find-cinema-item>  
-      <div :class="{'d-none':isNone}">该城市没有影院在播放该电影，请重新选择城市</div>
+  <div id="find_cinema">
+    <!--1： 头部导航栏部分，为其搭建一个组件 -->   
+    <my-header-nav></my-header-nav>
+    <van-tabs animated>
+      <!-- 这里写的是时间  用假的时间来填充页面-->
+      <van-tab v-for="(item,i) of dayList" :title="item" :key="i"> 
+        <div class="today" v-show="i==0" :class="{'d-none':!isNone}">今天有场次</div>
+        <!--2： 把数据传递给子组件 -->
+        <find-cinema-item v-for="(cinema,i) of list.cinema" :key="i" :cinema="cinema" :time="list.movie[i]"></find-cinema-item>          
+      </van-tab>
+    </van-tabs>
+    <!--3： 在页面没有数据时，这句话就会显示出来 -->
+    <div :class="{'d-none':isNone}" class="noMovie">该城市没有影院在播放该电影，请重新选择城市</div>
   </div>
 </template>
 <script>
 import findCinemaItem from "./FindCinemaItem";
-//从movieLi 跳转过来时，要把 city_id (vuex获取),mid(movieLi)获取过来
+//从movieLi 跳转过来时，要把 city_id (vuex获取),mid(movieLi)获取过来+
 export default {
   data(){
     return{
-        mid:"",
-        list:[],
-        isNone:true,
-            // 
-            value: 0,
-          switch1: false,
-          switch2: false,
-          option: [
-            { text: '全部商品', value: 0 },
-            { text: '新款商品', value: 1 },
-            { text: '活动商品', value: 2 }
-          ]
-            // 
-    }
+      mid:"",
+      list:[],
+      isNone:true,
+      week:["周日","周一","周二","周三","周四","周五","周六"],
+      dayList:[],
+  }
   },
   props:{
 
@@ -45,9 +37,37 @@ export default {
     }
   },
   methods:{
-    //
-        onConfirm() {
-      this.$refs.item.toggle();
+    //获取今天的时间
+    getDay(num){
+      var d2=new Date();
+      d2=d2.getTime();
+      d2+=num*24*60*60*1000;
+      //以d2毫秒数为基础
+      var d1=new Date(d2);
+      var month=d1.getMonth();
+      month= (month<9) ? month+1 : ("0"+(month+1))
+      var date=d1.getDate();
+      var week=d1.getDay();
+      var d3=new Date();
+      // console.log(d3);
+      return [month+"-"+date,week];
+
+    },
+    getDayList(){
+      for(var i=0;i<7;i++){
+        var arr=["今天","明天","后天"]
+        if(i<3){
+          var arrDay=this.getDay(i);
+          var arrTime=arr[i]+arrDay[0]
+          this.dayList.push(arrTime);
+        }else{
+          var arrDay=this.getDay(i);
+          var j=arrDay[1];
+          var arrTime=this.week[j]+arrDay[0]
+          this.dayList.push(arrTime);
+        }
+      }
+      console.log(this.dayList);
     },
     // 获取mid的函数
     routeMid(){
@@ -74,6 +94,8 @@ export default {
     // console.log(this.$route.query);
     this.routeMid();
     this.load();
+    this.getDay();
+    this.getDayList();
   },
   components:{
     findCinemaItem,
@@ -81,6 +103,20 @@ export default {
 }
 </script>
 <style>
+  /* @import url('../../assets/css/findCinema.css'); */
+  #find_cinema .today{
+    font-size:1.3rem;
+    line-height: 30px;
+    color:#999999;
+    background-color:#f5f5f5;
+    padding:1px 0 0 4vw;
+  }
+  #find_cinema .noMovie{
+    font-size:1.5rem;
+    padding:20px;
+    text-align: center;
+    color:#999999;
+  }
   .d-none{
     display: none;
   }

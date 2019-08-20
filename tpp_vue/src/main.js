@@ -100,6 +100,8 @@ var store = new Vuex.Store({
 import City from "./components/City"
 Vue.component("my-city",City);
 
+import HeaderNav from "./components/HeaderNav"
+Vue.component("my-header-nav",HeaderNav)
 Vue.config.productionTip = false
 
 

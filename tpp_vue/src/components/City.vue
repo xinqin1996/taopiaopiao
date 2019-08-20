@@ -1,6 +1,12 @@
 <template>
-  <div>
-    <h1 @click="selectCity">{{cityName}}</h1>
+  <div id="select_city">
+    <div class="sel_img">
+      <img src="../../public/img/theme_icon.svg" alt="">
+    </div>
+    <div  class="sel_city" @click="selectCity">{{cityName}}</div>
+    <div class="sel_icon">
+      <div></div>
+    </div>
   </div>
 </template>
 <script>
@@ -25,6 +31,37 @@ export default {
 }
 </script>
 <style scoped>
+  #select_city{
+    display:flex;
+    width:28vw;
+  }
+  #select_city .sel_img{
+    width:40%;
+    height:100%;
+    text-align:center;
+  }
+  #select_city .sel_img img{
+    width:4.5vh;
+    margin-top:1.1vh;
+  }
+  #select_city .sel_city{
+    font-size:14px;
+    line-height: 6.3vh;
+  } 
+  #select_city .sel_icon{
+    width:20%;
+    position:relative;
+  }
+  #select_city .sel_icon>div{
+    width:1.33vw;
+    height:1.33vw;
+    border-left:1px solid #000;
+    border-bottom:1px solid #000;
+    position:absolute;
+    transform:rotate(-45deg);
+    top:40%;
+    left:25%;
+  }
   .notFound{
     font-size:32px;
   }
