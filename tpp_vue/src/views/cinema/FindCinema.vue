@@ -5,6 +5,7 @@
     <van-tabs animated>
       <!-- 这里写的是时间  用假的时间来填充页面-->
       <van-tab v-for="(item,i) of dayList" :title="item" :key="i"> 
+        <div class="placeholder"></div>
         <div class="today" v-show="i==0" :class="{'d-none':!isNone}">今天有场次</div>
         <!--2： 把数据传递给子组件 -->
         <find-cinema-item v-for="(cinema,i) of list.cinema" :key="i" :cinema="cinema" :time="list.movie[i]"></find-cinema-item>          
@@ -69,9 +70,9 @@ export default {
       }
       console.log(this.dayList);
     },
-    // 获取mid的函数
+    // 获取mid的函数    //通过这个函数获取到mid的值  this.$router.push({  })传过来的mid
     routeMid(){
-      this.mid = this.$route.query.mid
+      this.mid = this.$route.query.mid    
     },
     //ajax请求
     load(){
@@ -110,6 +111,14 @@ export default {
     color:#999999;
     background-color:#f5f5f5;
     padding:1px 0 0 4vw;
+  }
+  #find_cinema .van-tabs__wrap{
+    position:fixed;
+    /* top:60px;  */
+    z-index:1;
+  }
+  #find_cinema .placeholder{
+    height:44px;
   }
   #find_cinema .noMovie{
     font-size:1.5rem;

@@ -2,6 +2,24 @@ const express = require("express");
 const router = express.Router();
 const pool=require("../pool");
 
+//影院搜索
+router.get("/v1/search_cinema",(req,res)=>{
+  var sel=req.query.sel;
+    // sel=[`%${sel}%`];  //把sel写成数组形式
+  sel=`%${sel}%`;
+  // select * from emp where ename like '%q%';
+  var sql="SELECT * FROM tpp_cinema WHERE cname LIKE ? OR caddress LIKE ?";
+  // SELECT * FROM tpp_cinema WHERE cname LIKE '%杭%'
+  pool.query(sql,[sel,sel],(err,result)=>{
+    if(err) throw err;
+    if(result.length==0){
+      res.send({code:0,msg:"没有查询的任何信息",data:result});
+    }else{
+      res.send({code:1,msg:"查询成功",data:result});
+    }
+  })
+})
+
 //查询  通过城市city_id 和 mid 查找影院,并把影院显示在页面上，
 //先选择电影，在选择影城时，展示所有影城的信息
 router.get("/v1/find_cinema",(req,res)=>{

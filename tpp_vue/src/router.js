@@ -15,6 +15,7 @@ import Home from './views/Home'
 import SelectCity from './views/city/SelectCity'
 import MovieDetail from './views/movie/MovieDetail'
 import FindCinema from './views/cinema/FindCinema'
+import Cinema from './views/cinema/Cinema'
 import Login from "./views/login/Login.vue"
 import Reguser from "./views/reguser/Reguser.vue"
 
@@ -27,6 +28,7 @@ export default new Router({
     {path:'/selectCity',component:SelectCity},
     {path:'/movieDetail/:mid',component:MovieDetail,props:true},
     {path:'/findCinema',component:FindCinema},
+    {path:'/cinema',component:Cinema},
     {path:'/login',component:Login},
     {path:'/reguser',component:Reguser}
     // {path:'/',component:Index},

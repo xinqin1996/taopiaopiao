@@ -37,6 +37,10 @@ Vue.use(Vuex);
 var store = new Vuex.Store({
   //共享数据
   state:{
+    cid:"",
+    cname:"",
+    mid:"",
+    mname:"",
     city_id:7,
     city:"杭州",
     active:"movie",
@@ -54,6 +58,18 @@ var store = new Vuex.Store({
     changeActiveTwo(state,val){     //tabbar点击更换activeTwo
       state.activeTwo=val;
     },
+    changeMid(state,val){
+      state.mid=val;
+    },
+    changeMname(state,val){
+      state.mname=val;
+    },
+    changeCid(state,val){
+      state.cid=val;
+    },
+    changeCname(state,val){
+      state.cname=val;
+    }
     // increment(state){ //购物车数量加1
     //   state.cartCount++;
     // },

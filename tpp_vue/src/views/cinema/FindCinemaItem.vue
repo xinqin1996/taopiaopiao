@@ -9,7 +9,7 @@
     <br>
     <hr> -->
     <div class="cinema_item">
-      <div class="cname">{{cinema.cname}}</div>
+      <div class="cname" @click="goCinema">{{cinema.cname}}</div>
       <div class="caddress">{{cinema.caddress}}</div>
       <div class="tag cf">
         <div class="tag_icon" v-for="(elem,i) of strSplit(cinema.tag)" :key="i">{{elem}}</div>
@@ -18,6 +18,7 @@
         <div class="hui">惠</div>
         <div class="content">{{cinema.prefe}}</div>
       </div>
+      <!-- 时间的排列 -->
       <div class="time">
         <ul class="cf" :style="{width:ulWidth+'px'}">
           <li class="time_block" v-for="(elem,j) of time" :key="j">
@@ -40,6 +41,14 @@ export default {
     }
   },
   methods:{
+    //---------跳转到影院界面,同时把cid,cname,保存到vuex---------
+    goCinema(){
+      this.$router.push("/cinema");
+      //--vuex--
+      // this.$store.commit("changeMname",this.elem.mname)
+      this.$store.commit("changeCid",this.cinema.cid)
+      this.$store.commit("changeCname",this.cinema.cname)
+    },
     getUlWidth(){
       //-----直接在created:里写，使用getComputedStyle报错，但是有效果；
       var li=document.getElementsByClassName("time_block")[0];
