@@ -23,12 +23,14 @@
         <!-- 给这个元素设置高度，使其产生scroll效果 -->
         <div class="input_content">
           <!-- <div class="input_main"> -->
-            <div v-for="(item,i) of searchList" :key="i" class="input_block" :data-cid="item.cid"  @click="goCinema">
-              <div class="cname">
+            <div v-for="(item,i) of searchList" :key="i" class="input_block" >
+              <div class="cover"  :data-cid="item.cid" @click="goCinema"></div>
+              <div class="cname"  >
+                <!-- {{item.cid}} -->
                 <span v-for="(elem,i) of item.cname" :key="i" :class="{red:elem==inputValue}">{{elem}}</span>
               </div>
               <div class="caddress">
-                <span v-for="(elem,i) of item.caddress" :key="i" :class="{red:elem==inputValue}">{{elem}}</span>              
+                <span v-for="(elem,i) of item.caddress"  :key="i" :class="{red:elem==inputValue}">{{elem}}</span>              
               </div>
               <div class="tag">
                 <div class="tag_icon" v-for="(elem,i) of strSplit(item.tag)" :key="i">{{elem}}</div>
@@ -58,12 +60,17 @@ export default {
   },
   methods:{
     //---------跳转到影院界面,同时把cid,cname,保存到vuex---------
-    goCinema(){
-      this.$router.push("/cinema");
+    goCinema(e){
+      var cid=e.target.dataset.cid;
+      // var cid=e.target.dataset.cid;
+      // var cname=e.target.dataset.cname;
+      console.log(cid);
+      // console.log(cname);
       //--vuex--
       // this.$store.commit("changeMname",this.elem.mname)
-      this.$store.commit("changeCid",this.searchList.cid)
-      this.$store.commit("changeCname",this.searchList.cname)
+      this.$store.commit("changeCid",cid)
+      // this.$store.commit("changeCname",cname)
+      this.$router.push("/cinema");
     },  
     //split函数，用于切割字符串形成数组
     strSplit(str){
@@ -118,6 +125,7 @@ export default {
           }
           // console.log(list);
           this.searchList=list;
+          console.log(this.searchList)
         }
       })        
     },
@@ -133,5 +141,13 @@ export default {
 }
 </script>
 <style>
+  #header_search .input_block{
+    position: relative;;
+  }
+  #header_search .input_block .cover{
+    width:100%;height:100%;
+    position:absolute;
+    top:0;left:0;
+  }
   @import url('../assets/css/headerSearch.css');
 </style>

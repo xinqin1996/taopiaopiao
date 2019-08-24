@@ -12,6 +12,15 @@ router.get("/v1/movie_is_show",(req,res)=>{
   })
 })
 
+//查询轮播图图片
+router.get("/v1/carousel",(req,res)=>{       
+  var sql="SELECT * FROM tpp_carousel";
+  pool.query(sql,(err,result)=>{
+    if(err) throw err;
+    res.send({code:1,msg:"查询成功",data:result});
+  })
+})
+
 //查询单个电影的详情页
 router.get("/v1/movie_detail",(req,res)=>{
   var mid=req.query.mid;         

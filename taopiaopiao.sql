@@ -13,6 +13,21 @@ CREATE TABLE tpp_user(
   upwd VARCHAR(32)     #6-18位大写小字母，数字
 );
 
+-- 添加轮播图图片
+CREATE TABLE tpp_carousel(
+  id INT PRIMARY KEY AUTO_INCREMENT,
+img_url VARCHAR(255)
+);
+-- UPDATE tpp_carousel SET img_url ='carousel/carousel1.jpg';
+-- UPDATE tpp_carousel SET img_url ='carousel/carousel2.jpg';
+-- UPDATE tpp_carousel SET img_url ='carousel/carousel3.jpg';
+
+INSERT INTO tpp_carousel VALUES
+(NULL,'carousel/carousel1.jpg'),
+(NULL,'carousel/carousel2.jpg'),
+(NULL,'carousel/carousel3.jpg');
+
+
 -- 说明：电影的播放日期时间和日期不知道怎么写
 -- 暂不处理
 
@@ -64,7 +79,6 @@ CREATE TABLE tpp_city(
 --   prefe VARCHAR(64),    #特惠信息
 --   lowest DECIMAL(10,1)   #41.7   元起
 -- );
-
 
 /** 具体电影城有哪些电影 cinema **/
 -- 点进某个影院时，展示电影列表

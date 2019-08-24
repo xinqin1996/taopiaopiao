@@ -1,12 +1,19 @@
 <template>
   <div>
-    <movie-li v-for="(elem,i) of list" :key="i" :elem="elem">
-      
-    </movie-li>
+    <movie-li v-for="(item,i) of list" :key="i"
+    :imgurl="`http://127.0.0.1:5050/${item.pic}`"
+    :mname="item.mname" 
+    :score="item.score" 
+    :auteur="item.auteur" 
+    :performer="item.performer" 
+    :d23="item.d23" 
+    :elem="item"
+    :screen="item.screen"></movie-li>
   </div>  
 </template>
 <script>
 import movieLi from "./MovieLi";
+
 export default {
   data(){
     return {
@@ -21,7 +28,7 @@ export default {
       // console.log(this.showList);
 			var url="movie/v1/movie_is_show";
 			var obj={is_show:is_show};
-			// console.log(obj);
+			//console.log(obj);
 			this.axios.get(url,{params:obj}).then(res=>{
 				if(res.data.code==-1){
 					console.log("没有电影")
@@ -44,5 +51,4 @@ export default {
 }
 </script>
 <style>
-
 </style>

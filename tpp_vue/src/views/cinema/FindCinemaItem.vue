@@ -76,9 +76,8 @@ export default {
   },
   created(){
     // this.getUlWidth();
-    console.log(this.cinema);
-    console.log(this.time);
-    // this.strSplit('观影小食,可停车');
+    // console.log(this.cinema);  //打印父组件传过来的数值
+    // console.log(this.time);    //
   },  
   props:{
     cinema:{default:""},

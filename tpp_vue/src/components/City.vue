@@ -1,4 +1,5 @@
 <template>
+  <!-- 这是一个width：28vw的弹性容器，可以把它放到其他页面的div中，来实现组件的调用 -->
   <div id="select_city">
     <div class="sel_img">
       <img src="../../public/img/theme_icon.svg" alt="">

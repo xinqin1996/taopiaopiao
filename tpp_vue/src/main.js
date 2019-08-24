@@ -37,9 +37,9 @@ Vue.use(Vuex);
 var store = new Vuex.Store({
   //共享数据
   state:{
-    cid:"",
+    cid:2,  //给一个初始id 防止服务器端在没有cid时报错
     cname:"",
-    mid:"",
+    mid:2,
     mname:"",
     city_id:7,
     city:"杭州",
@@ -87,6 +87,9 @@ var store = new Vuex.Store({
     },
     getCity(state){
       return state.city;
+    },
+    getMid(state){
+      return state.mid;
     }
   },
   //添加异步操作数据函数
@@ -118,7 +121,12 @@ Vue.component("my-city",City);
 
 import HeaderNav from "./components/HeaderNav"
 Vue.component("my-header-nav",HeaderNav)
+
+import Login from "./views/login/Login.vue"
+Vue.component("my-login",Login)
+
 Vue.config.productionTip = false
+
 
 
 // 还需要加载图标字体文件

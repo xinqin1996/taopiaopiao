@@ -59,10 +59,14 @@ export default {
                 // console.log(res);
                 // 7.1登录失败  提示
                 if(res.data.code==-1){
+                    console.log(1);
                     this.$toast("用户名或密码错误")
                 }else{
+                    this.$store.commit("changeActive",'movie');  //不用也行
+                    window.history.go(0);
+                    //刷新页面，会清除掉前面改变过得vuex
                 // 7.2登录成功  跳转到首页组件
-                    this.$router.push("/")
+                    // this.$router.push("/")
                 }
                 }
             )

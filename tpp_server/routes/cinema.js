@@ -20,6 +20,20 @@ router.get("/v1/search_cinema",(req,res)=>{
   })
 })
 
+//查询影院的详情
+router.get("/v1/cinema_detail",(req,res)=>{
+  var cid=req.query.cid;
+  var sql="SELECT * FROM tpp_cinema WHERE cid = ?"
+  pool.query(sql,[cid],(err,result)=>{
+    if(err) throw err;
+    if(result.length==0){
+      res.send({code:0,msg:"查询出错任"});
+    }else{
+      res.send({code:1,msg:"查询成功",data:result});
+    }
+  })
+})
+
 //查询  通过城市city_id 和 mid 查找影院,并把影院显示在页面上，
 //先选择电影，在选择影城时，展示所有影城的信息
 router.get("/v1/find_cinema",(req,res)=>{

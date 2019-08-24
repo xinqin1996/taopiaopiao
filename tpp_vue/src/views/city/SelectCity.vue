@@ -159,7 +159,7 @@ export default {
         this.$store.commit("selectCity",this.cityInfor);
         console.log(this.cityInfor);   //打桩操作
 				// this.$router.push("/home");
-				//返回前一个页面
+        //返回前一个页面
 				window.history.go(-1);
 			}
 		}
