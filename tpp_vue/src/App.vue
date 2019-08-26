@@ -1,6 +1,11 @@
 <template>
  <div class="app-container">
-    <router-view></router-view>
+    <!-- <router-view></router-view> -->
+    <!--  缓存保存：套一层keep-alive -->
+   <keep-alive>
+      <router-view v-if="$route.meta.keepAlive"></router-view>
+   </keep-alive>
+   <router-view v-if="!$route.meta.keepAlive"></router-view>
  </div>
 </template>
 

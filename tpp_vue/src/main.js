@@ -37,6 +37,9 @@ Vue.use(Vuex);
 var store = new Vuex.Store({
   //共享数据
   state:{
+    toLoginPath:"/",   //从页面跳转到登录页时，保存跳转前的路径
+    uname:"",
+    url:"http://127.0.0.1:5050/",
     cid:2,  //给一个初始id 防止服务器端在没有cid时报错
     cname:"",
     mid:2,
@@ -69,6 +72,12 @@ var store = new Vuex.Store({
     },
     changeCname(state,val){
       state.cname=val;
+    },
+    changeUname(state,val){
+      state.uname=val;
+    },
+    changeToLoginPath(state,val){
+      state.toLoginPath=val;
     }
     // increment(state){ //购物车数量加1
     //   state.cartCount++;
@@ -122,8 +131,6 @@ Vue.component("my-city",City);
 import HeaderNav from "./components/HeaderNav"
 Vue.component("my-header-nav",HeaderNav)
 
-import Login from "./views/login/Login.vue"
-Vue.component("my-login",Login)
 
 Vue.config.productionTip = false
 

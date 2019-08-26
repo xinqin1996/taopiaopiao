@@ -14,7 +14,7 @@
                 <mt-button @click="login">登 录</mt-button>
             </div>
             <!-- 5:免费注册 -->
-            <a href="http://127.0.0.1:8080/#/reguser" class="fontstyle">没有账号?免费注册</a>
+            <router-link to="/reguser" class="fontstyle">没有账号?免费注册</router-link>
         </div>
     </div>
 </template>
@@ -28,6 +28,11 @@ export default {
             uphone:"",
             upwd:""
         }
+    },
+    computed:{
+        toLoginPath(){ return this.$store.state.toLoginPath;},
+        cid(){return this.$store.state.cid; },
+        mid(){return this.$store.state.mid; },
     },
     methods:{
         login(){
@@ -57,16 +62,23 @@ export default {
             (res=>{
                 // 7：获取服务器返回结果
                 // console.log(res);
-                // 7.1登录失败  提示
+                // 7.1登录失败  提示  17816899467
                 if(res.data.code==-1){
                     console.log(1);
                     this.$toast("用户名或密码错误")
                 }else{
-                    this.$store.commit("changeActive",'movie');  //不用也行
-                    window.history.go(0);
-                    //刷新页面，会清除掉前面改变过得vuex
-                // 7.2登录成功  跳转到首页组件
-                    // this.$router.push("/")
+                    //这里进行判断
+                      //1 在买票时被迫登录,返回登录完返回上一页（选择了电影获取电影院时，没有登录，被迫登录）   
+                      if(this.mid!="" || this.cid!=""){
+                          this.$router.push(this.toLoginPath);
+                      }else{     
+                        //2 直接登录,没有浏览过就会直接跳转到主页
+                        //    1: 先设置主页面的active=movie  跳转到首页组件
+                        this.$store.commit("changeActive",'movie');  
+                        this.$router.push("/")          
+                        // window.history.go(0); 该方法不可用，
+                        //刷新页面，会清除掉前面改变过得vuex 
+                    }      
                 }
                 }
             )

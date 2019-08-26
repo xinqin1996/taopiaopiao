@@ -113,7 +113,7 @@ router.get("/v1/cinema_hasmovies",(req,res)=>{
     // console.log(cid);
     var get_infor=function(){
       var mid=result[i].mid;
-      var sql="SELECT mname,pic,is_show,score,wish,infor FROM tpp_movie WHERE mid = ?"
+      var sql="SELECT mid,mname,pic,is_show,score,wish,infor FROM tpp_movie WHERE mid = ?"
       pool.query(sql,[mid],(err,result)=>{
         if(err) throw err;
         // console.log(result);

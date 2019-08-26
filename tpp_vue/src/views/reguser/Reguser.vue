@@ -57,9 +57,9 @@ export default {
                 if(res.data.code==0){
                     "注册失败"
                 }else{
-                    // this.$router.push("/Login")
-                    this.$store.commit("changeActive",'my'); 
-                    this.$router.push("/")
+                    this.$router.push("/login")
+                    // this.$store.commit("changeActive",'my'); 
+                    // this.$router.push("/")
                 } 
             })
         }

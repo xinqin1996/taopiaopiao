@@ -1,5 +1,13 @@
 <template>
-  <div id="cinema_show">
+  <div id="cinema_show" v-cloak>
+    <div class="wait" id="wait">
+      <div class="wait_icon">
+        <img :src="url+'cinema/load_wait.svg'" alt="">
+      </div>
+      <div class="wait_font animated rollln">
+        正在加载,么么哒~
+      </div>
+    </div>
     <!--1 头部 ： 影院详情 -->
     <div class="cinema_top">
       <div class="title">{{cinema.cname}}</div>
@@ -28,13 +36,15 @@
       <ul class="img_ul cf" :style="{marginLeft:marginLeft+'px',width:ulWidth}">
         <li class="img_li" v-for="(item,index) of movie" :key="index"> 
           <div class="img_block" :class="{activeImg:index==i,noActive:index!=i}">
-            <img   :src="`http://127.0.0.1:5050/${item.pic}`" alt="">
+            <img   :src="`http://127.0.0.1:5050/${item.pic}`" alt="" @click="toMovieDetail">
+            <router-link :to="'/movieDetail/'+item.mid"></router-link>
+            <!-- <a href=""></a> -->
             <div class="cover" :data-index="index" :class="{active:index==i}" @click="changeI" ></div>
           </div>
         </li>
       </ul>
     </div>
-    <!--  -->
+    <!-- 简介部分 -->
     <div class="cinema_middle_title" v-for="(item,index) of movie" :key="index" :class="{'d-none':index!=i}">
       <span class="title">{{item.mname}}</span>
       <span class="show" :class="{'d-none':item.is_show==0}">
@@ -50,14 +60,57 @@
     </div>
     <!--3 头部 ： 电影播放时间 -->
     <div class="cinema_bottom" >
-      <van-tabs v-model="active" line-width='5.3vw' color="#ff2e62" line-height="2px">
-        <van-tab title="今天08-24">
-          内容 1
+      <van-tabs v-model="active" line-width='5.3vw' color="#ff2e62" line-height="2px" title-active-color="#ff2e62" v-for="(item,index) of time" :key="index" v-show="index==i">
+        <van-tab :title="'今天'+getDay(0)">
+          <div class="noPlay" v-show="item[0].room==''">今天{{getDay(0)}}暂无场次</div>
+          <div class="time_item" v-show="item[0].room!=''" v-for="(elem,j) of item" :key="j">
+            <div class="item1">
+              <div>{{elem.time_start}}</div>
+              <div>{{elem.time_end}}散场</div>
+            </div>
+            <div class="item2">
+              <div>{{elem.d23}}</div>
+              <div>{{elem.room}}</div>
+            </div>
+            <div class="item3">
+              <div><span>{{elem.price_e}}</span><span> 元</span></div>
+              <div>{{elem.price_s}}元</div>
+            </div>
+            <div class="item4">
+              <div>购票</div>
+            </div>
+          </div>
         </van-tab>
-        <van-tab title="明天08-25">
-          内容 2       
+        <van-tab :title="'明天'+getDay(1)">
+          <div class="noPlay" v-show="item[0].room==''">明天{{getDay(1)}}暂无场次</div>
+          <div class="time_item" v-show="item[0].room!=''" v-for="(elem,j) of item" :key="j">
+            <div class="item1">
+              <div>{{elem.time_start}}</div>
+              <div>{{elem.time_end}}散场</div>
+            </div>
+            <div class="item2">
+              <div>{{elem.d23}}</div>
+              <div>{{elem.room}}</div>
+            </div>
+            <div class="item3">
+              <div><span>{{elem.price_e}}</span><span> 元</span></div>
+              <div>{{elem.price_s}}元</div>
+            </div>
+            <div class="item4">
+              <div>购票</div>
+            </div>
+          </div>
         </van-tab>
       </van-tabs>
+    </div>
+    <!-- 4 尾部 ： 淘票票图标 -->
+    <div class="cinema_floor">
+      <img :src="url+'cinema/moive_floor.svg'" alt="">
+    </div>
+    <!-- 5 为登录弹框 -->
+    <div class="cinema_login" v-show="uname==''" @click="toLogin">
+      <div>请先登录再购买电影票</div>
+      <div>登录</div>
     </div>
   </div>
 </template>
@@ -65,7 +118,9 @@
 export default {
   data(){
     return {
+      uname:'',
       active: 2,
+      iTem:0,     //临时保存i的值
       i:0,        //那张图片变大
       marginLeft:window.innerWidth*0.39,  // 22vw一个位移 ,保存了ul的margin-left值
       xStart:"",  //保存了初始手指位置
@@ -79,8 +134,13 @@ export default {
     }
   },
   watch:{
+    //监听i;
+    // i(){
+    //   this.iCenter();
+    // },
+    //监听marginLeft;
     marginLeft(){
-            //2 对marginLeft进行控制
+      //2 对marginLeft进行控制
       var mlEnd=this.marginLeft;    //3 获取移动结束的margin-left值
       //4 下面动态改变i的值      
       var ml=this.marginLeft;
@@ -114,9 +174,12 @@ export default {
       imgBlock.style.width=(17.6+3.3*scale)*wiw*0.01+'px';
       imgBlock.style.height=(24.3+4.5*scale)*wiw*0.01+'px';
       imgBlock.style.left=(2.5+7.5*(1-scale))+'%';
-    }
+    },
   },
   computed:{
+    url(){
+      return this.$store.state.url;
+    },
     //使用计算属性，动态返回图片的路径
     imgUrls(){
       if(this.movie.length==0){ 
@@ -132,13 +195,89 @@ export default {
   },
   created(){
     //调用axios函数
+    console.log(this.$route.path)
+    console.log(window.location.href)
     this.loadCinema();
-    this.loadMore();
+    this.isLogin();
   },
-  mounted(){
-    this.loadCinema();
+  mounted(){      
+    this.loadMore();   
+    this.wait();
+    this.waitNone();
   },
-  methods:{ 
+  methods:{
+    //2 跳转到详情页
+    toMovieDetail(){
+
+    },
+    //1 跳转到登录页，保存住当前页面的地址
+    toLogin(){
+      this.$store.commit("changeToLoginPath",this.$route.path)
+      this.$router.push("/login")
+    },
+    //2 判断是否登录
+    isLogin(){
+      var url="user/v1/isLogin";
+      this.axios.get(url).then(res=>{
+        if(res.data.code==-1){
+          console.log(res.data.msg);
+        }else{
+          //登录成功，保存住uname;
+          console.log("打印用户登录信息",res.data.data[0]);
+          this.uname=res.data.data[0].uname;
+        }
+      })
+    },
+    //获取今天的时间和明天的时间
+    getDay(num){
+      var d2=new Date();
+      d2=d2.getTime();
+      d2+=num*24*60*60*1000;
+      //以d2毫秒数为基础
+      var d1=new Date(d2);
+      var month=d1.getMonth();
+      month= (month>=9) ? month+1 : ("0"+(month+1))
+      var date=d1.getDate();
+      date=(date>=10) ? date : ('0'+date);
+      return month+"-"+date;
+    },
+    //预漏斗函数
+    waitNone(){
+      var wait=document.getElementById("wait");
+      setTimeout(()=>{
+        wait.style.display="none";
+      },1000)
+    },
+    //1 动态计算那部电影会居中显示
+    showI(){
+      for(var i=0;i<this.movie.length;i++){
+        if(this.movie[i].mid==this.mid){
+          this.iTem=i;  //获取真实的mid对应的下标
+          return;
+        }
+      }      
+    },
+    //页面刷新，等待500执行
+    wait(){
+      setTimeout(()=>{
+        this.i=this.iTem;
+        setTimeout(()=>{
+          this.iCenter();          
+        },100)
+
+      },300)
+    },
+    //i位置的图片居中函数
+    iCenter(){
+      var ml=-window.innerWidth*0.22*(this.i)+window.innerWidth*0.39;
+      this.marginLeft=ml; 
+      var wiw=this.wiw;
+      var imgBlock=document.getElementsByClassName("activeImg")[0]
+      imgBlock.style.width=20.9*wiw*0.01+'px';
+      imgBlock.style.height=28.8*wiw*0.01+'px';
+      imgBlock.style.left='2.5%';
+    },
+    //切割字符串的icon的函数
     strSplit(str){
       var arr=str.split("，");
       // console.log(arr)
@@ -171,14 +310,14 @@ export default {
     },
     //鼠标松开时，使下标i的图片居中
     ontouchend(){
-      var ml=-window.innerWidth*0.22*(this.i)+window.innerWidth*0.39;
-      this.marginLeft=ml; 
-      var wiw=this.wiw;
-      var imgBlock=document.getElementsByClassName("activeImg")[0]
-      imgBlock.style.width=20.9*wiw*0.01+'px';
-      imgBlock.style.height=28.8*wiw*0.01+'px';
-      imgBlock.style.left='2.5%';
-
+      this.iCenter();
+      // var ml=-window.innerWidth*0.22*(this.i)+window.innerWidth*0.39;
+      // this.marginLeft=ml; 
+      // var wiw=this.wiw;
+      // var imgBlock=document.getElementsByClassName("activeImg")[0]
+      // imgBlock.style.width=20.9*wiw*0.01+'px';
+      // imgBlock.style.height=28.8*wiw*0.01+'px';
+      // imgBlock.style.left='2.5%';
     },
     //点击时保存鼠标初始位置，和ul的起始位置
     ontouchstart(e){
@@ -215,7 +354,8 @@ export default {
           //后台传回mid
           // var mid=this.$store.getMid();
           // console.log(this.mname);
-
+          console.log(this.movie);
+          this.showI();
           this.ulWidth=this.movie.length*window.innerWidth*0.22+'px'
           // console.log("axios查询成功")
         }else{

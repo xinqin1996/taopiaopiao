@@ -24,18 +24,33 @@ Vue.use(Router)
 export default new Router({
   routes: [
     // {path:'/hello',component:HelloContainer},
-    {path:'/',component:Home},
-    {path:'/selectCity',component:SelectCity},
-    {path:'/movieDetail/:mid',component:MovieDetail,props:true},
-    {path:'/findCinema',component:FindCinema},
-    {path:'/cinema',component:Cinema},
-    {path:'/login',component:Login},
-    {path:'/reguser',component:Reguser}
+    {path:'/',component:Home,meta:{keepAlive:false}},    //false 不需要缓存页面 true需要缓存页面
+    {path:'/selectCity',component:SelectCity,meta:{keepAlive:false}},
+    {path:'/movieDetail/:mid',component:MovieDetail,props:true,meta:{keepAlive:false}},
+    {path:'/findCinema',component:FindCinema,meta:{keepAlive:false}},
+    {path:'/cinema',component:Cinema,meta:{keepAlive:false}},
+    {path:'/login',component:Login,meta:{keepAlive:false}},
+    {path:'/reguser',component:Reguser,meta:{keepAlive:false}}
     // {path:'/',component:Index},
     // {path:'/lady',component:Lady},
     // {path:'/shoppingCar',component:ShoppingCar},
     // {path:'/select',component:select},
     // {path:'*',component:NotFound},
     
-  ]
+  ],
+  // 缓存保存
+  mode: 'history',
+  scrollBehavior (to, from, savedPosition) {
+    if (savedPosition) {
+      return savedPosition
+    } else {
+      return { x: 0, y: 0 }
+    }
+  }
+  // this.$router.back();
+  //1 获取路由地址
+  // console.log(this.$route.path)
+  // console.log(window.location.href)
+  //2 返回前一个页面 
+  // this.$router.back()
 })

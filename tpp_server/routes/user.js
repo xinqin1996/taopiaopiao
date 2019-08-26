@@ -33,6 +33,7 @@ router.get("/v1/login",(req,res)=>{
        //result=[{uid:1}]
       req.session.uid=result[0].uid;
       console.log(req.session);
+      // console.log(req.session.uid)
       res.send({code:"1",msg:"登录成功"})
     }
   })
@@ -50,12 +51,13 @@ router.get("/v1/islogin",(req,res)=>{
   };
   var sql='SELECT uname FROM tpp_user WHERE uid = ?'
   pool.query(sql,[uid],(err,result)=>{
-    if(err) throw err;
+    if(err) throw err; 
     if(result.length==0){
       res.send({code:"-1",msg:"出现错误，没有找到uname"});
     }else{
       //登录成功 1: 保存凭据在session中，2: 把成功的信息发送给脚手架
        //result=[{uid:1}]
+        //req.session.destroy();  退出登录
       res.send({code:"1",msg:"用户已经登录",data:result})
     }
   })

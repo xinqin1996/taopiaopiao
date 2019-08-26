@@ -143,3 +143,12 @@
     background: linear-gradient(90deg, rgba(255, 255, 255, 0.3) 0%, #fff 40%, #fff 100%);
     line-height: 2.5rem;
     width: 14vw; }
+
+#movie_detail .detail_seat {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background-color: #ff326f;
+  line-height: 14.5vw;
+  color: #fff;
+  font-size: 1.8rem; }

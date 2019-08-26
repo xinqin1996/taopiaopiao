@@ -1,10 +1,11 @@
 <template>
   <div id="movie_detail">
+    <!-- 1 video -->
     <div class="detail_video" :style="{height:videoHeight+'px'}">
       <video :src="`http://127.0.0.1:5050/${list.video}`" controls ></video>
       <div class="video_bottom"></div>
     </div>
-
+    <!-- 2 中间详情 -->
     <div class="detail_middle">
       <!-- 图片和名字 -->
       <div class="middle_one cf">
@@ -40,7 +41,7 @@
       </div>
     </div>
     <div class="detail_blank"></div>
-
+    <!-- 3 简介 -->
     <div class="detail_bottom">
       <mt-navbar v-model="selected">
         <mt-tab-item id="1">简介</mt-tab-item>
@@ -63,7 +64,10 @@
         </mt-tab-container-item>
       </mt-tab-container>
     </div>
-    
+    <!-- 4 选座购票 -->
+    <h3 class="detail_seat" @click="find_cinema">
+      选座购票
+    </h3>
   </div>  
 </template>
 <script>
@@ -79,6 +83,13 @@ export default {
     }
   },
   methods:{
+    find_cinema(){
+      //把mid的值传给findCinema;
+      this.$router.push({
+        path:'/findCinema',
+        query:{mid:this.mid}
+      })
+    },
     //show 点击展开更多
     show(){
       this.isHeight=false;
@@ -112,7 +123,6 @@ export default {
   },
   created(){
     this.load();
-
   },
   computed:{
     is_show(){    //多少人想看控制显示

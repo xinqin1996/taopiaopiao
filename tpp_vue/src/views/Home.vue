@@ -1,5 +1,6 @@
 <template>
 	<div>
+		<!-- {{active}} -->
 		<mt-tab-container v-model="active">
 			<mt-tab-container-item id="movie">
 				<div class="cityAndShow cf">
@@ -18,8 +19,6 @@
 						<h2 @click="activeTwo_soon" class="h2">即将上映</h2>					
 					</div>					
 				</div>
-
-
 				<van-swipe :autoplay="3000">
 					<van-swipe-item v-for="(item,i) of list" :key="i" class="carouselImg">
      					<img :src="`http://127.0.0.1:5050/${item.img_url}`" alt="">
@@ -44,26 +43,26 @@
 			</mt-tab-container-item>
 
 			<mt-tab-container-item id="my">
-				<my-login></my-login>
+				<my-home></my-home>
 			</mt-tab-container-item>
 
 		</mt-tab-container>
 
 		<mt-tabbar v-model="active" fixed>
-			<mt-tab-item id="movie" data-cid="movie" @click.native="changeState(0)">
+			<mt-tab-item id="movie" data-cid="movie" @click.native="changeState(0);changeActive()">
 				<tabaricon
 				:selectedImage="require('../../public/img/电影active.png')"
                 :normalImage="require('../../public/img/电影.png')"
                 :focused="currentIndex[0].isSelect"></tabaricon>
 				热映</mt-tab-item>
-			<mt-tab-item id="cinema" data-cid="cinema" @click.native="changeState(1)">
+			<mt-tab-item id="cinema" data-cid="cinema" @click.native="changeState(1);changeActive()">
 				<tabaricon
 				:selectedImage="require('../../public/img/影院active.png')"
                 :normalImage="require('../../public/img/影院.png')"
                 :focused="currentIndex[1].isSelect"></tabaricon>
 				影院
 			</mt-tab-item>
-			<mt-tab-item id="my" data-cid="my" @click.native="changeState(2)">
+			<mt-tab-item id="my" data-cid="my" @click.native="changeState(2);changeActive()">
 				<tabaricon
 				:selectedImage="require('../../public/img/我的active.png')"
                 :normalImage="require('../../public/img/我的.png')"
@@ -74,6 +73,7 @@
 	</div>
 </template>
 <script>
+import myHome from "./my/MyHome.vue"
 import movieList from "./movie/MovieList";
 //1.2引入底部导航条的图片切换组件
 import TabarIcon from "./movie/TabarIcon.vue"
@@ -125,7 +125,12 @@ export default {
                 }
             })
         },
-		//切换（正在热映）-（即将上映）
+		// 改变vuex的active
+		changeActive(){
+			console.log("打印出当前页面的active:",this.active);
+			this.$store.commit("changeActive",this.active);
+		},
+		//切换（正在热映）-（即将上映） 在这里保存住activeTwo的信息，在城市选择页面跳转过来时，可以回到原位置
 		activeTwo_now(){
 			this.activeTwo="now";
 			this.$store.commit("changeActiveTwo",this.activeTwo)
@@ -170,7 +175,8 @@ export default {
 	components:{
 		//注册子组件
 		movieList,
-		"tabaricon":TabarIcon
+		"tabaricon":TabarIcon,
+		myHome,
 	}
 	// methods:{
 	// 	getActive(val){

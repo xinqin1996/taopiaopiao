@@ -46,11 +46,9 @@ export default {
       //以d2毫秒数为基础
       var d1=new Date(d2);
       var month=d1.getMonth();
-      month= (month<9) ? month+1 : ("0"+(month+1))
+      month= (month>=9) ? month+1 : ("0"+(month+1))
       var date=d1.getDate();
       var week=d1.getDay();
-      var d3=new Date();
-      // console.log(d3);
       return [month+"-"+date,week];
 
     },
