@@ -1,5 +1,7 @@
 <template>
   <div id="find_cinema">
+    <!-- 加载漏斗组件 -->
+    <my-load-wait></my-load-wait>
     <!--1： 头部导航栏部分，为其搭建一个组件 -->   
     <my-header-nav></my-header-nav>
     <van-tabs animated>

@@ -29,8 +29,19 @@ export default {
             upwd:""
         }
     },
+    // 使用路由钩子在页面里获取跳转过来的路径
+    beforeRouteEnter (to, from, next) {
+        next(vm=>{
+            console.log("打印出从哪个页面跳转过来",from.fullPath);
+            //判断，是否为 /reguser false，将其保存
+            if(from.path!="/reguser"){
+                vm.$store.commit("changeToLoginPath",from.fullPath)
+            }
+            next();  //允许跳转      
+        })
+    },
     computed:{
-        toLoginPath(){ return this.$store.state.toLoginPath;},
+        toLoginPath(){ return this.$store.state.toLoginPath;},  //获取从哪个页面跳转到登录页面
         cid(){return this.$store.state.cid; },
         mid(){return this.$store.state.mid; },
     },
@@ -58,8 +69,7 @@ export default {
             // 6：发送ajax请求 axios
             var url="user/v1/login";
             var obj={uphone:u,upwd:p}
-            this.axios.get(url,{params:obj}).then
-            (res=>{
+            this.axios.get(url,{params:obj}).then(res=>{
                 // 7：获取服务器返回结果
                 // console.log(res);
                 // 7.1登录失败  提示  17816899467
@@ -67,19 +77,25 @@ export default {
                     console.log(1);
                     this.$toast("用户名或密码错误")
                 }else{
-                    //这里进行判断
-                      //1 在买票时被迫登录,返回登录完返回上一页（选择了电影获取电影院时，没有登录，被迫登录）   
-                      if(this.mid!="" || this.cid!=""){
-                          this.$router.push(this.toLoginPath);
-                      }else{     
-                        //2 直接登录,没有浏览过就会直接跳转到主页
-                        //    1: 先设置主页面的active=movie  跳转到首页组件
-                        this.$store.commit("changeActive",'movie');  
-                        this.$router.push("/")          
-                        // window.history.go(0); 该方法不可用，
-                        //刷新页面，会清除掉前面改变过得vuex 
-                    }      
-                }
+                    //登录成功，先保存一下uid;
+                    this.$store.commit("changeUid",res.data.data);
+                    //登录时，在这里进行判断  /  /findCinema  /cinema 一共三种情况
+                        var path=this.$store.getters.getToLoginPath;
+                        //1 /
+                        if(path=="/"){
+                            //  先设置主页面的active=movie  跳转到首页组件
+                            // window.history.go(0); 该方法不可用，
+                            //刷新页面，会清除掉前面改变过得vuex 
+                            this.$store.commit("changeActive",'movie');  
+                            // this.$router.push("/")     
+                            this.$router.go(-1);
+                        }else{
+                            // this.$router.push(path);
+                            this.$router.go(-1);         //不会刷新页面，返回history上一页
+                            // location.replace(path);   //跳转时，会刷新页面，导致vuex数据丢失
+
+                        }
+                    }
                 }
             )
         }

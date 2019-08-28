@@ -12,47 +12,7 @@
 //       <img src="http://127.0.0.1:5050/icon/dingwei.svg" alt="">
 //       <img src="http://127.0.0.1:5050/icon/collect.svg" alt="">
 //     </div>
-@keyframes scroll{
-  0%{transform:rotate(0deg);}
-  10%{transform:rotate(36deg);}
-  20%{transform:rotate(72deg);}
-  30%{transform:rotate(108deg);}
-  40%{transform:rotate(144deg);}
-  50%{transform:rotate(180deg);}
-  60%{transform:rotate(216deg);}
-  70%{transform:rotate(252deg);}
-  80%{transform:rotate(288deg);}
-  90%{transform:rotate(324deg);}
-  100%{transform:rotate(360deg);}
-}
 #cinema_show{ 
-  .wait{
-    position:absolute;
-    z-index:15;
-    width:100%;
-    background-color:#efefee;
-    height:100%;
-
-    .wait_icon{
-      animation-name:scroll;
-      animation-duration:1.5s;
-      animation-iteration-count: infinite;
-      width:15vw;
-      height:15vw;
-      position:absolute;
-      top:50%;left:50%;
-      margin:-7.5vw 0 0 -7.5vw;      
-      img{
-        width:100%;
-      }
-    }
-    .wait_font{
-      position:absolute;
-      top:58%;left:50%;
-      font-size:1.6rem;
-      margin-left:-62.9px;
-    }
-  }
   .cinema_top{
     padding:4vw;
     position: relative;

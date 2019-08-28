@@ -15,8 +15,8 @@
 						</van-tab>
 					</van-tabs> -->
 					<div class="changeh">
-						<h2 @click="activeTwo_now" class="h2">正在热映</h2>
-						<h2 @click="activeTwo_soon" class="h2">即将上映</h2>					
+						<h2 @click="activeTwo_now" class="h2" id="now">正在热映</h2>
+						<h2 @click="activeTwo_soon" class="h2" id="soon">即将上映</h2>			
 					</div>					
 				</div>
 				<van-swipe :autoplay="3000">
@@ -24,7 +24,6 @@
      					<img :src="`http://127.0.0.1:5050/${item.img_url}`" alt="">
 					</van-swipe-item>
 				</van-swipe> 
-
 				<mt-tab-container v-model="activeTwo">
 					<mt-tab-container-item id="now">      
 					<!-- 这里是正在热映的内容 -->
@@ -36,18 +35,14 @@
 					</mt-tab-container-item>
 				</mt-tab-container>
 			</mt-tab-container-item>
-			
 			<mt-tab-container-item id="cinema">
 				<my-city></my-city>
 				影院
 			</mt-tab-container-item>
-
 			<mt-tab-container-item id="my">
 				<my-home></my-home>
 			</mt-tab-container-item>
-
 		</mt-tab-container>
-
 		<mt-tabbar v-model="active" fixed>
 			<mt-tab-item id="movie" data-cid="movie" @click.native="changeState(0);changeActive()">
 				<tabaricon
@@ -97,6 +92,11 @@ export default {
 			// notShowList:[],
 		}
 	},
+	mounted(){
+		var act=this.getActiveTwo;
+		var doc=document.getElementById(act);
+		doc.style.borderBottom='2px solid #ff2e62';
+	},
 	methods:{
 		    changeState(idx){
             // 功能：指定当前按钮状态修改true
@@ -131,12 +131,18 @@ export default {
 			this.$store.commit("changeActive",this.active);
 		},
 		//切换（正在热映）-（即将上映） 在这里保存住activeTwo的信息，在城市选择页面跳转过来时，可以回到原位置
-		activeTwo_now(){
+		activeTwo_now(e){
 			this.activeTwo="now";
+			e.target.style.borderBottom='2px solid #ff2e62';
+			var sib=e.target.nextElementSibling
+			sib.style.borderBottom='none';
 			this.$store.commit("changeActiveTwo",this.activeTwo)
 		},
-		activeTwo_soon(){
+		activeTwo_soon(e){
 			this.activeTwo="soon";
+			e.target.style.borderBottom='2px solid #ff2e62';
+			var sib=e.target.previousElementSibling
+			sib.style.borderBottom='none';
 			this.$store.commit("changeActiveTwo",this.activeTwo)
 		},
 		// loadList(is_show){
@@ -192,9 +198,10 @@ export default {
 	.changeh{
 		float:right;
 		/* position:fixed; */
-		top:13px;right:28px;
-		width:130px;
-		z-index:50;
+		/* top:13px;right:28px; */
+		width:160px;
+		z-index:20;
+		margin-left:80px;
 		background-color:#fff;
 		height:44px;
 		line-height: 44px;
@@ -203,8 +210,10 @@ export default {
 	}
 	.h2{
 		font-size:15px;
-		padding:2px;	
+		padding:2px 0px;
+		margin:0px 6px;	
 		cursor: pointer;
+		/* border-bottom:2px solid #ff2e62; */
 	}
 	tabbarTwo{
 		float:right;

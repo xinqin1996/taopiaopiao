@@ -21,7 +21,7 @@
       <!-- 时间的排列 -->
       <div class="time">
         <ul class="cf" :style="{width:ulWidth+'px'}">
-          <li class="time_block" v-for="(elem,j) of time" :key="j">
+          <li class="time_block" v-for="(elem,j) of time" :key="j" @click="goSeat" :data-cmid="elem.cmid">
             <h3 class="h_1">{{elem.time_start}}</h3>
             <h3 class="h_2">{{elem.d23}}</h3>
             <h3 class="h_3">{{elem.price_e}}</h3>
@@ -41,6 +41,23 @@ export default {
     }
   },
   methods:{
+    //跳转到seat.vue
+    goSeat(e){
+      var cmid=e.currentTarget.dataset.cmid;
+      var uid=this.$store.getters.getUid;
+      //1 如果登录了，跳转到seat.vue
+      console.log(uid);
+      if(uid!=""){
+        this.$router.push(`/seat/${cmid}`)
+      }else{
+        //2 如果没登录,先登录，在跳转
+        this.$messagebox.confirm("是否立即登录")
+        .then(action=>{
+          this.$router.push('/login')
+        })
+        .catch(err=>{return;})
+      }
+    },
     //---------跳转到影院界面,同时把cid,cname,保存到vuex---------
     goCinema(){
       this.$router.push("/cinema");

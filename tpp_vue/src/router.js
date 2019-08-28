@@ -18,39 +18,53 @@ import FindCinema from './views/cinema/FindCinema'
 import Cinema from './views/cinema/Cinema'
 import Login from "./views/login/Login.vue"
 import Reguser from "./views/reguser/Reguser.vue"
+import Seat from "./views/seat/Seat.vue"
+import Seat1 from "./views/seat/Seat1.vue"
 
 Vue.use(Router)
 
-export default new Router({
+const router = new Router({    //1 使用ES6的规范，到出一个对象
   routes: [
-    // {path:'/hello',component:HelloContainer},
+    // {path:'/hello',component:HelloContainer},         //false 时，页面跳转过去，不会刷新页面
     {path:'/',component:Home,meta:{keepAlive:false}},    //false 不需要缓存页面 true需要缓存页面
     {path:'/selectCity',component:SelectCity,meta:{keepAlive:false}},
-    {path:'/movieDetail/:mid',component:MovieDetail,props:true,meta:{keepAlive:false}},
-    {path:'/findCinema',component:FindCinema,meta:{keepAlive:false}},
+    {path:'/movieDetail/:mid',component:MovieDetail,props:true,meta:{keepAlive:false}},  //只有电影详情页使用了路由传参，尽量不使用
+    {path:'/findCinema',component:FindCinema,meta:{keepAlive:false}},                //使用了路由，query传参
     {path:'/cinema',component:Cinema,meta:{keepAlive:false}},
     {path:'/login',component:Login,meta:{keepAlive:false}},
-    {path:'/reguser',component:Reguser,meta:{keepAlive:false}}
+    {path:'/reguser',component:Reguser,meta:{keepAlive:false}},
+    {path:'/seat',component:Seat,meta:{keepAlive:false}},
+    {path:'/seat1',component:Seat1,meta:{keepAlive:false}},
     // {path:'/',component:Index},
     // {path:'/lady',component:Lady},
     // {path:'/shoppingCar',component:ShoppingCar},
     // {path:'/select',component:select},
     // {path:'*',component:NotFound},
-    
   ],
   // 缓存保存
-  mode: 'history',
+  mode: 'history',     //history // hash
   scrollBehavior (to, from, savedPosition) {
     if (savedPosition) {
       return savedPosition
     } else {
-      return { x: 0, y: 0 }
+      if(from.meta.keepAlive){
+        from.meta.savedPosition=document.body.scrollTop
+      }
+      return { x: 0, y: to.meta.savedPosition || 0} 
     }
   }
-  // this.$router.back();
+  //注释：位置确实记录上了(加缓存，返回不刷新页面)，也就是说，返回不触发created，所以有些页面需要返回触发的东西都写在activated里面
+  //activated() 在进入页面时触发函数，在缓存下也触发
+
   //1 获取路由地址
   // console.log(this.$route.path)
   // console.log(window.location.href)
   //2 返回前一个页面 
-  // this.$router.back()
+  // history.back();回到上一页
 })
+router.beforeEach( (to,from,next)=>{  //路由守卫，在页面跳转时打印路由的from和to
+  // console.log(from)
+  // console.log(to) 
+  next();
+})
+export default router;

@@ -2,7 +2,7 @@
   <div id="movie_detail">
     <!-- 1 video -->
     <div class="detail_video" :style="{height:videoHeight+'px'}">
-      <video :src="`http://127.0.0.1:5050/${list.video}`" controls ></video>
+      <video :src="videoUrl" controls ></video>
       <div class="video_bottom"></div>
     </div>
     <!-- 2 中间详情 -->
@@ -11,7 +11,7 @@
       <div class="middle_one cf">
         <!-- 图片 -->
         <div class="one_left">
-          <img :src="`http://127.0.0.1:5050/${list.pic}`" alt="">
+          <img :src="picUrl" alt="">
           <div class="icon">{{list.pic_label}}</div>
         </div>
         <!-- 名字 -->
@@ -64,8 +64,8 @@
         </mt-tab-container-item>
       </mt-tab-container>
     </div>
-    <!-- 4 选座购票 -->
-    <h3 class="detail_seat" @click="find_cinema">
+    <!-- 4 选座购票 从影院界面进入时，这个按钮不会显示-->
+    <h3 class="detail_seat" @click="find_cinema" v-show="path!='/cinema'">
       选座购票
     </h3>
   </div>  
@@ -75,19 +75,29 @@
 export default {
   data(){
     return {
-      list:{},
+      path:'',    //保存从哪个路径跳转过来，如果从/cinema 跳转过来，就不会显示选座购票按钮
+      list:[],
       videoHeight:window.innerHeight*0.35,
       start_width:'0px',
       selected:"1",
       isHeight:true,  //有一个固定高度
     }
   },
+  // 使用路由钩子在页面里获取跳转过来的路径
+  beforeRouteEnter (to, from, next) {
+    next(vm=>{
+      console.log(from.path);
+      console.log(vm);
+      vm.path=from.path
+      next();  //允许跳转      
+    })
+  },
   methods:{
+    //跳转到find_cinema页面
     find_cinema(){
-      //把mid的值传给findCinema;
       this.$router.push({
         path:'/findCinema',
-        query:{mid:this.mid}
+        query:{mid:this.list.mid}
       })
     },
     //show 点击展开更多
@@ -125,13 +135,33 @@ export default {
     this.load();
   },
   computed:{
+    url(){
+      return this.$store.state.url;
+    },
+    //pic路径
+    picUrl(){
+      if(this.list.length==0){
+        return 'http://127.0.0.1:5050/img/nezha.mp4';
+        //  或者 return null
+      }else{ 
+        return this.url+this.list.pic;
+      }
+    },
+    //video路径
+    videoUrl(){
+      if(this.list.length==0){
+        return 'http://127.0.0.1:5050/img/nezha.webp';
+      }else{ 
+        return this.url+this.list.video;
+      }
+    },
     is_show(){    //多少人想看控制显示
       return (this.list.is_show==1) ? true : false;
     }
   },
   props:{
-      mid:{default:""},
-  }
+    mid:{default:""},
+  },
 }
 </script>
 <style>

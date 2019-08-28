@@ -1,13 +1,7 @@
 <template>
   <div id="cinema_show" v-cloak>
-    <div class="wait" id="wait">
-      <div class="wait_icon">
-        <img :src="url+'cinema/load_wait.svg'" alt="">
-      </div>
-      <div class="wait_font animated rollln">
-        正在加载,么么哒~
-      </div>
-    </div>
+    <!-- load-wait 组件 -->
+    <my-load-wait></my-load-wait>
     <!--1 头部 ： 影院详情 -->
     <div class="cinema_top">
       <div class="title">{{cinema.cname}}</div>
@@ -36,7 +30,7 @@
       <ul class="img_ul cf" :style="{marginLeft:marginLeft+'px',width:ulWidth}">
         <li class="img_li" v-for="(item,index) of movie" :key="index"> 
           <div class="img_block" :class="{activeImg:index==i,noActive:index!=i}">
-            <img   :src="`http://127.0.0.1:5050/${item.pic}`" alt="" @click="toMovieDetail">
+            <img   :src="`http://127.0.0.1:5050/${item.pic}`" alt="">
             <router-link :to="'/movieDetail/'+item.mid"></router-link>
             <!-- <a href=""></a> -->
             <div class="cover" :data-index="index" :class="{active:index==i}" @click="changeI" ></div>
@@ -77,7 +71,7 @@
               <div>{{elem.price_s}}元</div>
             </div>
             <div class="item4">
-              <div>购票</div>
+              <div @click="goSeat" :data-cmid="elem.cmid">购票</div>
             </div>
           </div>
         </van-tab>
@@ -97,7 +91,7 @@
               <div>{{elem.price_s}}元</div>
             </div>
             <div class="item4">
-              <div>购票</div>
+              <div @click="goSeat" :data-cmid="elem.cmid">购票</div>
             </div>
           </div>
         </van-tab>
@@ -203,16 +197,26 @@ export default {
   mounted(){      
     this.loadMore();   
     this.wait();
-    this.waitNone();
   },
   methods:{
-    //2 跳转到详情页
-    toMovieDetail(){
-
+    //跳转到seat.vue
+    goSeat(e){
+      var cmid=e.currentTarget.dataset.cmid;
+      var uid=this.$store.getters.getUid;
+      //1 如果登录了，跳转到seat.vue
+      if(uid!=""){
+        this.$router.push(`/seat/${cmid}`)
+      }else{
+        //2 如果没登录,先登录，在跳转
+        this.$messagebox.confirm("是否立即登录")
+        .then(action=>{
+          this.$router.push('/login')
+        })
+        .catch(err=>{return;})
+      }
     },
     //1 跳转到登录页，保存住当前页面的地址
     toLogin(){
-      this.$store.commit("changeToLoginPath",this.$route.path)
       this.$router.push("/login")
     },
     //2 判断是否登录
@@ -240,13 +244,6 @@ export default {
       var date=d1.getDate();
       date=(date>=10) ? date : ('0'+date);
       return month+"-"+date;
-    },
-    //预漏斗函数
-    waitNone(){
-      var wait=document.getElementById("wait");
-      setTimeout(()=>{
-        wait.style.display="none";
-      },1000)
     },
     //1 动态计算那部电影会居中显示
     showI(){

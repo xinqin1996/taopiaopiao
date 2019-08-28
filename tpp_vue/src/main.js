@@ -37,12 +37,15 @@ Vue.use(Vuex);
 var store = new Vuex.Store({
   //共享数据
   state:{
-    toLoginPath:"/",   //从页面跳转到登录页时，保存跳转前的路径
+    url:"http://127.0.0.1:5050/",  //定义路径
+    uid:"",   //保存用户uid
+    cmid:"", //保存电影时间
+    toMoivePath:"",
+    toLoginPath:"",
     uname:"",
-    url:"http://127.0.0.1:5050/",
-    cid:2,  //给一个初始id 防止服务器端在没有cid时报错
+    cid:"",  //给一个初始id 防止服务器端在没有cid时报错
     cname:"",
-    mid:2,
+    mid:"",
     mname:"",
     city_id:7,
     city:"杭州",
@@ -73,12 +76,15 @@ var store = new Vuex.Store({
     changeCname(state,val){
       state.cname=val;
     },
-    changeUname(state,val){
-      state.uname=val;
-    },
     changeToLoginPath(state,val){
       state.toLoginPath=val;
-    }
+    },
+    changeUid(state,val){
+      state.uid=val;
+    },
+    changeCmid(state,val){
+      state.cmid=val;
+    },
     // increment(state){ //购物车数量加1
     //   state.cartCount++;
     // },
@@ -99,7 +105,14 @@ var store = new Vuex.Store({
     },
     getMid(state){
       return state.mid;
-    }
+    },
+    getUid(state){
+      return state.uid;
+    },
+    getToLoginPath(state){
+      return state.toLoginPath;
+    },
+    // this.$store.getters.getUid;  获取数据的语法；
   },
   //添加异步操作数据函数
   actions:{
@@ -130,6 +143,9 @@ Vue.component("my-city",City);
 
 import HeaderNav from "./components/HeaderNav"
 Vue.component("my-header-nav",HeaderNav)
+
+import LoadWait from "./components/LoadWait"
+Vue.component("my-load-wait",LoadWait)
 
 
 Vue.config.productionTip = false

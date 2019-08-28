@@ -34,7 +34,7 @@ router.get("/v1/login",(req,res)=>{
       req.session.uid=result[0].uid;
       console.log(req.session);
       // console.log(req.session.uid)
-      res.send({code:"1",msg:"登录成功"})
+      res.send({code:"1",msg:"登录成功",data:result[0].uid})
     }
   })
 })
@@ -58,7 +58,7 @@ router.get("/v1/islogin",(req,res)=>{
       //登录成功 1: 保存凭据在session中，2: 把成功的信息发送给脚手架
        //result=[{uid:1}]
         //req.session.destroy();  退出登录
-      res.send({code:"1",msg:"用户已经登录",data:result})
+      res.send({code:"1",msg:"用户已经登录",data:result,data2:uid})
     }
   })
 })

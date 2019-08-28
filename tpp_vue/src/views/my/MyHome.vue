@@ -117,7 +117,8 @@ export default {
           console.log(res.data.msg);
         }else{
           //登录成功，保存住uname;
-          console.log("打印用户登录信息",res.data.data[0]);
+          this.$store.commit("changeUid",res.data.data2)
+          console.log("打印用户登录信息",res.data.data[0],"用户已在线");
           this.uname=res.data.data[0].uname;
         }
       })
