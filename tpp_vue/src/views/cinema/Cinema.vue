@@ -205,7 +205,8 @@ export default {
       var uid=this.$store.getters.getUid;
       //1 如果登录了，跳转到seat.vue
       if(uid!=""){
-        this.$router.push(`/seat/${cmid}`)
+        this.$store.commit("changeCmid",cmid);
+        this.$router.push(`/seat`);
       }else{
         //2 如果没登录,先登录，在跳转
         this.$messagebox.confirm("是否立即登录")

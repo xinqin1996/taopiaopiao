@@ -37,6 +37,7 @@ Vue.use(Vuex);
 var store = new Vuex.Store({
   //共享数据
   state:{
+    seatObj:{},
     url:"http://127.0.0.1:5050/",  //定义路径
     uid:"",   //保存用户uid
     cmid:"", //保存电影时间
@@ -85,6 +86,9 @@ var store = new Vuex.Store({
     changeCmid(state,val){
       state.cmid=val;
     },
+    changeSeatObj(state,val){
+      state.seatObj=val;
+    },
     // increment(state){ //购物车数量加1
     //   state.cartCount++;
     // },
@@ -112,6 +116,9 @@ var store = new Vuex.Store({
     getToLoginPath(state){
       return state.toLoginPath;
     },
+    getSeatObj(state){
+      return state.seatObj;
+    }
     // this.$store.getters.getUid;  获取数据的语法；
   },
   //添加异步操作数据函数

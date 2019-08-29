@@ -19,7 +19,8 @@ import Cinema from './views/cinema/Cinema'
 import Login from "./views/login/Login.vue"
 import Reguser from "./views/reguser/Reguser.vue"
 import Seat from "./views/seat/Seat.vue"
-import Seat1 from "./views/seat/Seat1.vue"
+import Payment from "./views/payment/Payment.vue"
+import MyTicket from "./views/my/MyTicket.vue"
 
 Vue.use(Router)
 
@@ -34,7 +35,8 @@ const router = new Router({    //1 使用ES6的规范，到出一个对象
     {path:'/login',component:Login,meta:{keepAlive:false}},
     {path:'/reguser',component:Reguser,meta:{keepAlive:false}},
     {path:'/seat',component:Seat,meta:{keepAlive:false}},
-    {path:'/seat1',component:Seat1,meta:{keepAlive:false}},
+    {path:'/payment',component:Payment,meta:{keepAlive:false}},
+    {path:'/myticket',component:MyTicket,meta:{keepAlive:false}},
     // {path:'/',component:Index},
     // {path:'/lady',component:Lady},
     // {path:'/shoppingCar',component:ShoppingCar},

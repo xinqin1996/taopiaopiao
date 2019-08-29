@@ -1,6 +1,61 @@
 const express = require("express");
 const router = express.Router();
 const pool=require("../pool");
+const bodyParser=require("body-parser")    //get 传参的组件导入
+
+//获得电影票
+router.get("/v1/get_ticket",(req,res)=>{
+  var uid=req.session.uid;
+  if(!uid){
+    res.send({code:0,msg:"没有登录"})
+  }else{
+    var sql="SELECT * FROM tpp_user_ticket WHERE uid = ?";
+    pool.query(sql,[uid],(err,result)=>{
+      if(err) throw err;
+      if(result.length>0){
+        res.send({code:1,msg:"查询成功",data:result})
+      }else{
+        res.send({code:0,msg:"该用户没有购买电影票",data:result})
+      }
+    })
+  }
+})
+
+//购买电影票
+// var uid = req.session.uid;
+router.post("/v1/ticket",bodyParser.json(),(req,res)=>{
+// router.post("/v1/ticket",function(req,res){
+  console.log(req.body);
+  var obj=req.body;
+  var uid = req.session.uid;
+  console.log(req.session);
+  // console.log(uid);
+  if(!uid){
+    res.send({code:0,msg:"未知的错误，用户未登录"})
+  }else{
+    //遍历obj.seat 把数据插入表格
+      //1 拼接sql语句
+      var sql="INSERT INTO tpp_user_ticket VALUES (NULL,?,?,?,?,?,?)";    
+      for(var i=1;i<obj.seat.length;i++){
+        sql+=",(NULL,?,?,?,?,?,?)"
+      }
+      //2 拼接插入的数据
+      var arr=[];
+      for(var i=0;i<obj.seat.length;i++){
+        var arr1=[uid,obj.mname,obj.tdate,obj.d23,obj.cname,obj.seat[i]];
+        arr=arr.concat(arr1);
+      }
+      // 3 执行pool.query
+      pool.query(sql,arr,(err,result)=>{
+        if(err) throw err;
+        if(result.affectedRows>0){
+          res.send({code:1,msg:"购买成功，加入数据表"})
+        }else{
+          res.send({code:0,msg:"购买时发生错误，error"})
+        }
+      })      
+  }
+})
 
 //注册接口
 router.get("/v1/reg",(req,res)=>{
@@ -44,6 +99,7 @@ router.get("/v1/login",(req,res)=>{
 router.get("/v1/islogin",(req,res)=>{
   //获取uid，
   var uid = req.session.uid;
+  console.log(req.session);
   //如果不存在，无事发生，
   if(!uid){
     res.send({code:-1,msg:"用户未登录"}); 

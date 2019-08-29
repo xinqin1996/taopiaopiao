@@ -37,7 +37,9 @@
 			</mt-tab-container-item>
 			<mt-tab-container-item id="cinema">
 				<my-city></my-city>
-				影院
+				<div style="width:100vw;height:100vh">
+					<img style="width:25%;height:25%" src="http://127.0.0.1:5050/active_cinema.svg" alt="">
+				</div>
 			</mt-tab-container-item>
 			<mt-tab-container-item id="my">
 				<my-home></my-home>
@@ -48,20 +50,20 @@
 				<tabaricon
 				:selectedImage="require('../../public/img/电影active.png')"
                 :normalImage="require('../../public/img/电影.png')"
-                :focused="currentIndex[0].isSelect"></tabaricon>
+                :focused="active=='movie'"></tabaricon>
 				热映</mt-tab-item>
 			<mt-tab-item id="cinema" data-cid="cinema" @click.native="changeState(1);changeActive()">
 				<tabaricon
 				:selectedImage="require('../../public/img/影院active.png')"
                 :normalImage="require('../../public/img/影院.png')"
-                :focused="currentIndex[1].isSelect"></tabaricon>
+                :focused="active=='cinema'"></tabaricon>
 				影院
 			</mt-tab-item>
 			<mt-tab-item id="my" data-cid="my" @click.native="changeState(2);changeActive()">
 				<tabaricon
 				:selectedImage="require('../../public/img/我的active.png')"
                 :normalImage="require('../../public/img/我的.png')"
-                :focused="currentIndex[2].isSelect"></tabaricon>
+                :focused="active=='my'"></tabaricon>
 				我的
 			</mt-tab-item>
 		</mt-tabbar>

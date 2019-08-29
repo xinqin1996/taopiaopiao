@@ -13,6 +13,17 @@ CREATE TABLE tpp_user(
   upwd VARCHAR(32)     #6-18位大写小字母，数字
 );
 
+/**     用户电影票的信息      **/
+CREATE TABLE tpp_user_ticket(
+  tid INT PRIMARY KEY AUTO_INCREMENT,
+  uid INT,
+  mname VARCHAR(32),
+  tdate VARCHAR(32),
+  d23 VARCHAR(16),
+  cname VARCHAR(64),
+  seat VARCHAR(32)
+);
+
 -- 添加轮播图图片
 CREATE TABLE tpp_carousel(
   id INT PRIMARY KEY AUTO_INCREMENT,
@@ -167,7 +178,7 @@ INSERT INTO tpp_movie VALUES
 -- 电影院的编号，和简单的信息；电影院详情页，不打算写了
 INSERT INTO tpp_cinema VALUES
 -- 1号影院的杭
-(NULL,"杭州百老汇影城万象城店","江干区富春路701号万象城三层","7","杭州","观影小食，IMAX厅，可停车","使徒行者2：谍影行动等4部影片特惠","41.7"),
+(NULL,"杭州百老汇影城江干店","江干区富春路701号万象城三层","7","杭州","观影小食，IMAX厅，可停车","使徒行者2：谍影行动等4部影片特惠","41.7"),
 -- 2号影院的杭州
 (NULL,"杭州万汇影城万象城店","西湖区文二西路551号西城广场4楼","7","杭州","观影小食，艺术影厅，可停车","哪吒之魔童降世等7部影片特惠","29.4"),
 -- 3号影院的杭州

@@ -3,8 +3,8 @@
     <div class="content">
       <div class="dy-list-item">
         <div class="cinema-info">
-          <div class="dy-list-title">哪吒之魔童降世</div>
-          <div class="dy-list-brief">今天 08-20 20:05~21:55(国语 3D)</div>
+          <div class="dy-list-title" v-cloak>{{detail.cname}}</div>
+          <div class="dy-list-brief" v-cloak>今天 {{detail.time_start}}~{{detail.time_end}} ({{detail.d23}})</div>
         </div>
       </div>
       <div id="J_xseat">
@@ -54,16 +54,23 @@
 export default {
   data(){
     return {
+      num:0,
+      detail:[],     //保存了这部电影时间价格影院
+      cname:'',
       id:[1,3,4,6],
       list:[],      //座位列表  这种形式  [ {i:7,j:3},{i:7,j:4} ]   全部的座位列表
       soldList:[ {i:8,j:5},{i:8,j:3},{i:8,j:4},{i:6,j:5},{i:7,j:3},{i:7,j:4} ],  //已售位置
-      // buyList:[],   //${el.dataset.j}排${el.dataset.i}座  这种形式的名字 ,显示在底部
     }
   },
   created(){
+    this.load();
     this.createList();
   },
-  computed:{   //使用计算属性，计算出一个数组，里面包含了，choose==1的对象，可以（强行监听数组 list=[] 的变化）
+  computed:{   
+    cmid(){
+      return this.$store.state.cmid;
+    },
+    //使用计算属性，计算出一个数组，里面包含了，choose==1的对象，可以（强行监听数组 list=[] 的变化）
     buyList(){  
       var list=[];
       for(var j=0;j<this.list.length;j++){
@@ -78,30 +85,58 @@ export default {
   },  
   methods:{
     toPayment(){
-      
+      if(this.buyList.length>0){
+          // 路由传参对象，接受页面一刷新，数据就会变为
+          // {buyList: Array(4), detail: "[object Object]", cname: "[object Object]"}
+          var obj={buyList:this.buyList,detail:this.detail,cname:this.cname}
+          // console.log(obj);
+          // this.$router.push({
+          //   path:"/payment",
+          //   query:obj
+          // })      
+        //  vuex
+        this.$store.commit("changeSeatObj",obj);
+        this.$router.push('/payment')
+      }else{
+        this.$toast({
+          message:"请先选择座位",
+          duration:1000
+        })
+      }
+
     },
     //删除位置
     del(e){ 
-      console.log(e.currentTarget);
+      // console.log(e.currentTarget);
       var el=e.currentTarget;
       var j=el.dataset.j;
       var i=el.dataset.i;
       //找到对应的元素 删除      
       this.list[j][i].choose=0;
+      this.num--;
     },
     //选座位
     choose(e){
       var el=e.target;
       if(el.nodeName=="SPAN"){ 
         var s=el.dataset.show;
+        if(this.num>=6){
+          this.$toast({
+            message:"最多可选6个座位",
+            duration:1000
+          })
+          return;
+        }
         if(s!=0){         //在s!=0 是操作
           // var list=this.list;
           var j=el.dataset.j;
           var i=el.dataset.i;      
           if(el.dataset.choose==0){   //没有选中，让其选中
-            this.list[j][i].choose=1;     
+            this.list[j][i].choose=1;  
+            this.num++;   
           }else{                           //否则让其不选中
             this.list[j][i].choose=0;
+            this.num--;
           }      
         }
       } 
@@ -132,8 +167,17 @@ export default {
     },
     //load
     load(){
-      var url="cinema/seat"
-      // var cmid=
+      var url="cinema/v1/seat"
+      var cmid=this.cmid;
+      var obj={cmid};
+      this.axios.get(url,{params:obj}).then(res=>{
+        if(res.data.code==0){
+          console.log(res.data.msg)
+        }else{
+          this.detail=res.data.data.detail;
+          this.cname=res.data.data.cname;
+        }
+      })
     },
   }
 }

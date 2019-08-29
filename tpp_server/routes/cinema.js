@@ -2,6 +2,36 @@ const express = require("express");
 const router = express.Router();
 const pool=require("../pool");
 
+router.get("/v1/seat",(req,res)=>{
+  var data={
+    detail:[],
+    cname:"",
+  }
+  var cmid=req.query.cmid;
+  var sql = "SELECT * FROM tpp_cinema_movies WHERE cmid = ?";
+  pool.query(sql,[cmid],(err,result)=>{
+    if(err) throw err;
+    if(result.length==0){
+      res.send({code:0,msg:"没有查询到数据"})
+    }else{
+      data.detail=result[0];
+      //获取影城的名字
+      var cid=result[0].cid;
+      var sql="SELECT cname FROM tpp_cinema WHERE cid= ?"
+      pool.query(sql,[cid],(err,result)=>{
+        if(err) throw err;
+        if(result.length==0){
+          res.send({code:0,msg:"没有查询到数据"})
+        }else{
+          data.cname=result[0];
+          res.send({code:1,msg:"查询成功",data:data})          
+        }
+      })
+
+    }
+  })
+})
+
 //影院搜索
 router.get("/v1/search_cinema",(req,res)=>{
   var sel=req.query.sel;

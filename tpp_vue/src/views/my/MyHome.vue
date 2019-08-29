@@ -21,7 +21,7 @@
       <div class="main_content">
         <div class="block1 br">
           <van-grid :border="false" :column-num="3">
-            <van-grid-item text="电影票" :icon="url+'myHome/dianying.svg'">
+            <van-grid-item  @click="goMyTicket" text="电影票" :icon="url+'myHome/dianying.svg'">
             </van-grid-item>
             <van-grid-item text="小食" :icon="url+'myHome/xiaoshi.svg'">
             </van-grid-item>
@@ -102,13 +102,18 @@ export default {
       uname:"",
     }
   },
-    // $route (to,from) {
-    //   console.log(from); 
-    //   console.log(to); 
-    //   console.log(2);
-    // }
-  // },
   methods:{
+    //跳转到电影票页面
+    goMyTicket(){
+      if(this.uname==""){
+        this.$toast({
+          message:"请先登录再查看电影票",
+          duration:1000
+        })
+      }else{
+        this.$router.push("/myticket")
+      }
+    },
     //2 判断是否登录
     isLogin(){
       var url="user/v1/isLogin";
